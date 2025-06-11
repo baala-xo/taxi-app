@@ -4,6 +4,7 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useEffect, useState, useCallback } from 'react';
 import type { Ride, RecommendedDriver } from '@/types';
+import Image from 'next/image';
 
 export default function CustomerDashboard() {
   const supabase = createClientComponentClient();
@@ -13,7 +14,7 @@ export default function CustomerDashboard() {
   const [drivers, setDrivers] = useState<RecommendedDriver[]>([]);
   const [rideHistory, setRideHistory] = useState<Ride[]>([]);
 
-  // State for forms
+  // State for all forms
   const [bookingDriverId, setBookingDriverId] = useState<string | null>(null);
   const [pickup, setPickup] = useState('');
   const [dropoff, setDropoff] = useState('');
@@ -63,55 +64,53 @@ export default function CustomerDashboard() {
     else { alert('Review submitted successfully!'); setRatingRideId(null); fetchData(); }
   };
   
-  // --- DUMMY PAYMENT LOGIC IS HERE ---
   const handleDummyPayment = async (rideId: number) => {
     const { error } = await supabase.from('rides').update({ payment_status: 'paid' }).eq('id', rideId);
-    if (error) {
-      alert('Payment failed.');
-    } else {
-      alert('Payment successful!');
-      fetchData();
-    }
+    if (error) { alert('Payment failed.'); }
+    else { alert('Payment successful!'); fetchData(); }
   };
 
   if (loading) return <div className="p-8 text-center">Finding best drivers...</div>;
 
   return (
     <div>
-      {/* Section 1: Book a Ride */}
+      {/* Section 1: Recommended Drivers */}
       <h1 className="text-2xl font-bold">Recommended Drivers</h1>
       <p className="mt-2 text-gray-500">Our top drivers, sorted just for you.</p>
-      <div className="mt-6 space-y-4">
-        {drivers.length > 0 ? drivers.map((driver) => (
-          <div key={driver.id} className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-semibold text-lg">Driver {driver.id.substring(0, 8)}</p>
-                <div className="flex items-center space-x-4 text-sm text-gray-500">
-                  <span className="font-bold text-yellow-400">{Number(driver.average_rating).toFixed(1)} ★</span>
-                  <span>({driver.ride_count} rides)</span>
-                </div>
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {drivers.length > 0 ? drivers.map((driver, index) => (
+          <div key={driver.id} className="border rounded-lg shadow-lg overflow-hidden flex flex-col bg-gray-100 dark:bg-gray-800">
+            <div className="relative w-full aspect-square">
+              <Image src="/default-driver.png" alt={driver.full_name || 'Driver profile picture'} fill className="object-cover" sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />
+            </div>
+            <div className="p-4 flex flex-col flex-grow">
+              <h3 className="font-bold text-lg">{driver.full_name || `Driver ${driver.id.substring(0,6)}`}</h3>
+              <div className="flex items-center space-x-2 text-sm text-gray-500 mt-1">
+                <span className="font-bold text-yellow-400">{Number(driver.average_rating).toFixed(1)} ★</span>
+                <span>({driver.ride_count} rides)</span>
               </div>
-              {bookingDriverId !== driver.id && (<button onClick={() => setBookingDriverId(driver.id)} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Book Now</button>)}
+              <div className="mt-4 flex-grow flex flex-col justify-end">
+                {bookingDriverId !== driver.id && (<button onClick={() => setBookingDriverId(driver.id)} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors">Book Now</button>)}
+              </div>
             </div>
             {bookingDriverId === driver.id && (
-              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <div className="space-y-4">
-                  <input type="text" placeholder="Enter Pickup Location" value={pickup} onChange={(e) => setPickup(e.target.value)} className="w-full p-2 rounded bg-gray-200 dark:bg-gray-700"/>
-                  <input type="text" placeholder="Enter Dropoff Location" value={dropoff} onChange={(e) => setDropoff(e.target.value)} className="w-full p-2 rounded bg-gray-200 dark:bg-gray-700"/>
+              <div className="p-4 border-t bg-gray-200 dark:bg-gray-900">
+                <div className="space-y-2">
+                  <input type="text" placeholder="Pickup Location" value={pickup} onChange={(e) => setPickup(e.target.value)} className="w-full p-2 rounded bg-white dark:bg-gray-700"/>
+                  <input type="text" placeholder="Dropoff Location" value={dropoff} onChange={(e) => setDropoff(e.target.value)} className="w-full p-2 rounded bg-white dark:bg-gray-700"/>
                 </div>
                 <div className="mt-4 flex items-center justify-end space-x-2">
-                  <button onClick={() => setBookingDriverId(null)} className="text-gray-500 hover:text-gray-400">Cancel</button>
-                  <button onClick={handleConfirmBooking} disabled={isBooking} className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400">{isBooking ? 'Booking...' : 'Confirm Booking'}</button>
+                  <button onClick={() => setBookingDriverId(null)} className="text-gray-500 text-sm">Cancel</button>
+                  <button onClick={handleConfirmBooking} disabled={isBooking} className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded text-sm disabled:bg-gray-400">{isBooking ? 'Booking...' : 'Confirm'}</button>
                 </div>
               </div>
             )}
           </div>
-        )) : <div className="p-8 text-center bg-gray-100 dark:bg-gray-800 rounded-lg"><p>No drivers are available right now.</p></div>}
+        )) : <div className="col-span-full p-8 text-center bg-gray-100 dark:bg-gray-800 rounded-lg"><p>No drivers are available right now.</p></div>}
       </div>
       
       {/* Section 2: Ride History */}
-      <div className="mt-12">
+      <div className="mt-16">
         <h2 className="text-2xl font-bold">My Ride History</h2>
         <div className="mt-6 space-y-4">
           {rideHistory.length > 0 ? rideHistory.map((ride) => (
@@ -124,37 +123,21 @@ export default function CustomerDashboard() {
                 </div>
                 <div className="text-right">
                   <p className="font-bold text-lg">${ride.price}</p>
-                  {ride.payment_status === 'paid' ? 
-                    (<p className="text-sm font-semibold text-green-500">Paid</p>) : 
-                    (<p className="text-sm font-semibold text-red-500">Payment Due</p>)
-                  }
+                  {ride.payment_status === 'paid' ? (<p className="text-sm font-semibold text-green-500">Paid</p>) : (<p className="text-sm font-semibold text-red-500">Payment Due</p>)}
                 </div>
               </div>
-
-{ratingRideId !== ride.id && (
-  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-3">
-
-  
-    {ride.payment_status !== 'paid' && (
-      <button
-        onClick={() => handleDummyPayment(ride.id)}
-        // The button is disabled if the ride is not 'completed'
-        disabled={ride.status !== 'completed'}
-        // This title attribute creates the hover message
-        title={ride.status !== 'completed' ? 'Ride must be completed before payment(driver has to mark this ride as completed in his dashboard)' : 'Pay for this ride'}
-        // These styles make the button look disabled
-        className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded disabled:bg-gray-500 disabled:cursor-not-allowed"
-      >
-        Pay Now
-      </button>
-    )}
-
-    {/* The "Rate Ride" button logic remains the same */}
-    {ride.status === 'completed' && !ride.rating && (
-      <button onClick={() => { setRatingRideId(ride.id); setRating(0); setFeedback(''); }} className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">Rate Ride</button>
-    )}
-  </div>
-)}
+              {/* This is the correctly structured Action Buttons Area */}
+              {ratingRideId !== ride.id && (
+                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-3">
+                  {ride.payment_status !== 'paid' && (
+                    <button onClick={() => handleDummyPayment(ride.id)} disabled={ride.status !== 'completed'} title={ride.status !== 'completed' ? 'Ride must be completed before payment' : 'Pay for this ride'} className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded disabled:bg-gray-500 disabled:cursor-not-allowed">Pay Now</button>
+                  )}
+                  {ride.status === 'completed' && !ride.rating && (
+                    <button onClick={() => { setRatingRideId(ride.id); setRating(0); setFeedback(''); }} className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">Rate Ride</button>
+                  )}
+                </div>
+              )}
+              {/* This is the correctly structured Rating Form */}
               {ratingRideId === ride.id && (
                 <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <div className="flex items-center space-x-1">{[1, 2, 3, 4, 5].map(star => (<button key={star} onClick={() => setRating(star)} className={`text-2xl ${star <= rating ? 'text-yellow-400' : 'text-gray-400'}`}>★</button>))}</div>
