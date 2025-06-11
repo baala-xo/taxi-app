@@ -1,4 +1,4 @@
-// app/select-role/page.tsx
+
 'use client';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -10,14 +10,14 @@ export default function SelectRolePage() {
   const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
 
-  // Get the current user's ID
+
   useEffect(() => {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setUserId(user.id);
       } else {
-        router.push('/login'); // Not logged in, send to login
+        router.push('/login');
       }
     };
     getUser();
@@ -35,7 +35,7 @@ export default function SelectRolePage() {
       alert('Error setting role. Please try again.');
       console.error(error);
     } else {
-      // Success! Send them to their new dashboard.
+      
       router.push('/dashboard');
     }
   };
@@ -50,7 +50,7 @@ export default function SelectRolePage() {
       </div>
 
       <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-2xl">
-        {/* Customer Card */}
+      
         <div
           onClick={() => setRole('Customer')}
           className="p-8 border rounded-lg text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -59,7 +59,7 @@ export default function SelectRolePage() {
           <p className="mt-2 text-gray-500">I want to book rides.</p>
         </div>
 
-        {/* Driver Card */}
+      
         <div
           onClick={() => setRole('Driver')}
           className="p-8 border rounded-lg text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"

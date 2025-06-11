@@ -1,4 +1,4 @@
-// app/components/DriverDashboard.tsx
+
 'use client';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -58,7 +58,7 @@ export default function DriverDashboard() {
     <div>
       <h1 className="text-2xl font-bold">Driver Dashboard</h1>
 
-      {/* --- Summary Cards --- */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
         <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold">Total Earnings</h3>
@@ -73,7 +73,7 @@ export default function DriverDashboard() {
         </div>
       </div>
 
-      {/* Section: Current Bookings */}
+
       <div className="mt-12">
         <h2 className="text-xl font-semibold">My Current Bookings</h2>
         <div className="mt-4 space-y-4">
@@ -89,7 +89,7 @@ export default function DriverDashboard() {
         </div>
       </div>
 
-      {/* Section: Completed Ride History */}
+
       <div className="mt-12">
         <h2 className="text-xl font-semibold">Completed Ride History</h2>
         <div className="mt-4 space-y-4">
@@ -97,7 +97,7 @@ export default function DriverDashboard() {
             <div key={ride.id} className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
               <p><b>From:</b> {ride.pickup_location} <b>To:</b> {ride.dropoff_location}</p>
               
-              {/* --- THIS IS THE UPDATED SECTION --- */}
+
               <div className="mt-2 pt-2 border-t flex justify-between items-center">
                 <div className="flex items-baseline space-x-3">
                   <p className="text-lg font-bold text-green-500">${ride.price}</p>
@@ -111,7 +111,7 @@ export default function DriverDashboard() {
                   <p className="text-sm text-gray-500 text-right italic">{ride.feedback || 'No feedback'}</p>
                 </div>
               </div>
-              {/* --- END OF UPDATE --- */}
+
 
             </div>
            )) : <div className="p-8 text-center bg-gray-100 dark:bg-gray-800 rounded-lg"><p>You have no completed rides.</p></div>}

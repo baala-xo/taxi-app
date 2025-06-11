@@ -1,4 +1,4 @@
-// app/login/page.tsx
+
 
 "use client";
 import { Auth } from "@supabase/auth-ui-react";
@@ -11,8 +11,7 @@ export default function LoginPage() {
   const supabase = createClientComponentClient();
   const router = useRouter();
 
-  // This hook checks if a user is already logged in and redirects them
-  // to the dashboard if they try to access the login page.
+
   useEffect(() => {
     const getSession = async () => {
       const {

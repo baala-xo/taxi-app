@@ -1,4 +1,4 @@
-// app/components/CustomerDashboard.tsx
+
 'use client';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -14,7 +14,6 @@ export default function CustomerDashboard() {
   const [drivers, setDrivers] = useState<RecommendedDriver[]>([]);
   const [rideHistory, setRideHistory] = useState<Ride[]>([]);
 
-  // State for all forms
   const [bookingDriverId, setBookingDriverId] = useState<string | null>(null);
   const [pickup, setPickup] = useState('');
   const [dropoff, setDropoff] = useState('');
@@ -23,7 +22,7 @@ export default function CustomerDashboard() {
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
 
-  // --- DATA FETCHING ---
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
@@ -46,7 +45,7 @@ export default function CustomerDashboard() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  // --- LOGIC HANDLERS ---
+
   const handleConfirmBooking = async () => {
     if (!currentUserId || !bookingDriverId || !pickup || !dropoff) return;
     setIsBooking(true);
@@ -74,7 +73,7 @@ export default function CustomerDashboard() {
 
   return (
     <div>
-      {/* Section 1: Recommended Drivers */}
+
       <h1 className="text-2xl font-bold">Recommended Drivers</h1>
       <p className="mt-2 text-gray-500">Our top drivers, sorted just for you.</p>
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -109,7 +108,7 @@ export default function CustomerDashboard() {
         )) : <div className="col-span-full p-8 text-center bg-gray-100 dark:bg-gray-800 rounded-lg"><p>No drivers are available right now.</p></div>}
       </div>
       
-      {/* Section 2: Ride History */}
+
       <div className="mt-16">
         <h2 className="text-2xl font-bold">My Ride History</h2>
         <div className="mt-6 space-y-4">
@@ -126,7 +125,7 @@ export default function CustomerDashboard() {
                   {ride.payment_status === 'paid' ? (<p className="text-sm font-semibold text-green-500">Paid</p>) : (<p className="text-sm font-semibold text-red-500">Payment Due</p>)}
                 </div>
               </div>
-              {/* This is the correctly structured Action Buttons Area */}
+
               {ratingRideId !== ride.id && (
                 <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-3">
                   {ride.payment_status !== 'paid' && (
@@ -137,7 +136,7 @@ export default function CustomerDashboard() {
                   )}
                 </div>
               )}
-              {/* This is the correctly structured Rating Form */}
+
               {ratingRideId === ride.id && (
                 <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <div className="flex items-center space-x-1">{[1, 2, 3, 4, 5].map(star => (<button key={star} onClick={() => setRating(star)} className={`text-2xl ${star <= rating ? 'text-yellow-400' : 'text-gray-400'}`}>★</button>))}</div>

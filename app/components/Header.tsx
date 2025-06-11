@@ -1,4 +1,4 @@
-// app/components/Header.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -36,7 +36,7 @@ export default function Header() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push("/");
-    router.refresh(); // This ensures the page properly reflects the logged-out state.
+    router.refresh(); 
   };
 
   return (

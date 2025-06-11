@@ -1,4 +1,4 @@
-// app/dashboard/page.tsx
+
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -8,7 +8,7 @@ import CustomerDashboard from "../components/CustomerDashboard";
 export default async function DashboardPage() {
   const supabase = createServerComponentClient({ cookies });
 
-  // This now uses getUser() which is the recommended way
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -17,7 +17,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  // Fetch the user's profile
+
   const { data: profile, error } = await supabase
     .from("profiles")
     .select("role")
@@ -29,8 +29,7 @@ export default async function DashboardPage() {
   }
 
   if (error || !profile) {
-    // This can happen briefly if the trigger hasn't run yet after signup.
-    // Redirecting to role selection is a safe fallback.
+
     redirect('/select-role');
   }
 
