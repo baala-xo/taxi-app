@@ -1,71 +1,97 @@
-# 🚕 Taxi Booking System
 
-A full-stack taxi booking platform built with Next.js and Supabase for a technical assessment.
+# Taxi Booking System
+
+A full-stack taxi booking platform built using Next.js and Supabase, developed as part of a technical assessment. This project demonstrates modern full-stack development with real-time interactions, role-based access, and server-side automation.
 
 ## Features
 
-- **Authentication:** Passwordless sign-up and login via magic links.
-- **Role-Based Access Control:** Distinct portals and functionality for `Customer` and `Driver` roles.
-- **Driver Dashboard:** Displays total earnings, current bookings, ride history with ratings, and an availability toggle.
-- **Customer Dashboard:** Allows booking rides, viewing ride history, submitting ratings and feedback, and a dummy payment system.
-- **Recommendation Engine:** Sorts available drivers based on a score calculated from their average rating and total number of completed rides.
-- **Database Automation:** Utilizes PostgreSQL Triggers for automatic user profile creation and RPC Functions for efficient server-side calculations.
+- **Authentication**  
+  Users can sign up and log in without a password using Supabase magic links.
+
+- **Role-Based Access Control**  
+  Distinct interfaces and capabilities for customers and drivers, based on user roles.
+
+- **Driver Dashboard**  
+  Drivers can:
+  - View total earnings
+  - Manage current bookings
+  - Browse ride history with customer feedback
+  - Toggle their availability status
+
+- **Customer Dashboard**  
+  Customers can:
+  - Book rides
+  - View their ride history
+  - Rate and provide feedback on rides
+  - Simulate payments with a dummy system
+
+- **Driver Recommendation Engine**  
+  Ranks drivers based on a calculated score derived from their average rating and number of completed rides.
+
+- **Database Automation**  
+  Uses PostgreSQL triggers to auto-create user profiles and RPC functions for efficient backend computations.
 
 ## Tech Stack
 
-- **Framework:** Next.js (App Router)
-- **Backend-as-a-Service:** Supabase
-- **Database:** Postgres
-- **Styling:** Tailwind CSS
+- **Framework:** Next.js (App Router)  
+- **Backend:** Supabase  
+- **Database:** PostgreSQL  
+- **Styling:** Tailwind CSS  
 - **Language:** TypeScript
 
-## Local Development Setup
+## Getting Started (Local Development)
 
-1.  **Clone Repository**
+### 1. Clone the Repository
 
-    ```bash
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-    cd your-repo-name
-    ```
+```bash
+git clone https://github.com/baala-xo/taxi-app.git
+cd taxi-app
+```
 
-2.  **Install Dependencies**
+### 2. Install Dependencies
 
-    ```bash
-    npm install
-    ```
+```bash
+npm install
+```
 
-3.  **Setup Environment Variables**
+### 3. Configure Environment Variables
 
-    - Create a new Supabase project.
-    - Create a `.env.local` file in the project root.
-    - Add your Supabase Project URL and Anon Key:
+- Create a new project on [Supabase](https://supabase.com).
+- In the project root, create a `.env.local` file and add the following:
 
-    ```
-    NEXT_PUBLIC_SUPABASE_URL=YOUR_PROJECT_URL_HERE
-    NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY_HERE
-    NEXT_PUBLIC_BASE_URL=http://localhost:3000
-    ```
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
 
-4.  **Setup Database Schema**
+### 4. Set Up the Database Schema
 
-    - Navigate to the Supabase SQL Editor.
-    - Execute the contents of the `schema.sql` file to create all necessary tables, functions, and policies.
+- Go to your Supabase projectâ€™s SQL Editor.
+- Run the SQL commands from the `schema.sql` file to set up the database (tables, functions, and policies).
 
-5.  **Run Development Server**
-    ```bash
-    npm run dev
-    ```
-    The application will be available at `http://localhost:3000`.
+### 5. Start the Development Server
 
-## Testing Workflow
+```bash
+npm run dev
+```
 
-To test the end-to-end functionality, use two browser windows to simulate a Driver and a Customer simultaneously.
+Open your browser and go to [http://localhost:3000](http://localhost:3000).
 
-| Driver Workflow (Browser 1)                                | Customer Workflow (Browser 2)                                |
-| :--------------------------------------------------------- | :----------------------------------------------------------- |
-| 1. Sign up for a new account.                              | 1. Sign up with a second, different email address.           |
-| 2. Select the **"Driver"** role.                           | 2. Select the **"Customer"** role.                           |
-| 3. From the dashboard, toggle **"Available for Hire"** ON. | 3. See the available Driver appear on the dashboard.         |
-| 4. Wait for the booking to appear.                         | 4. Click **"Book Now"** and confirm the ride details.        |
-| 5. Click **"Mark as Complete"** on the new booking.        | 5. After the ride is complete, refresh the dashboard.        |
-| 6. Refresh to see updated earnings and rating.             | 6. In "Ride History", **"Pay Now"** and **"Rate"** the trip. |
+## Testing the Application
+
+To fully test the app, use two separate browser windows or tabs to simulate a customer and a driver.
+
+| Driver Workflow                                      | Customer Workflow                                     |
+| --------------------------------------------------- | ---------------------------------------------------- |
+| 1. Sign up with a new email.                        | 1. Sign up with a different email address.           |
+| 2. Choose the "Driver" role.                        | 2. Choose the "Customer" role.                       |
+| 3. Enable "Available for Hire" from the dashboard.  | 3. The available driver will appear on your screen.  |
+| 4. Wait for a booking to appear.                    | 4. Click "Book Now" to confirm a ride.               |
+| 5. After the ride appears, mark it as complete.     | 5. Once completed, refresh the dashboard.            |
+| 6. View updated earnings and average rating.        | 6. Go to "Ride History" to pay and rate the trip.    |
+
+## Repository
+
+You can find the full project source code here:  
+[https://github.com/baala-xo/taxi-app/tree/main](https://github.com/baala-xo/taxi-app/tree/main)
