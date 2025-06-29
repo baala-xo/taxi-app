@@ -1,59 +1,78 @@
-
-"use client";
+// app/components/Header.tsx
+'use client';
 
 import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import { User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [user, setUser] = useState<User | null>(null);
-  const router = useRouter();
+  const [role, setRole] = useState<string | null>(null);
   const supabase = createClientComponentClient();
 
   useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    const fetchUserAndProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
+      if (user) {
+        // Fetch the user's role from the profiles table
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        setRole(profile?.role || null);
+      } else {
+        setRole(null);
+      }
     };
 
-    getUser();
+    fetchUserAndProfile();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-      }
-    );
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      // Re-fetch everything when auth state changes (login/logout)
+      fetchUserAndProfile();
+    });
 
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [supabase, router]);
+  }, [supabase]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push("/");
-    router.refresh(); 
+    // Use a hard refresh to ensure all state is cleared across the app
+    window.location.href = '/';
   };
 
   return (
-    <header className="bg-gray-800 text-white p-4 sticky top-0 z-50">
-      <nav className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="font-bold text-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <nav className="container mx-auto flex justify-between items-center p-4">
+        <Link href="/" className="font-bold text-xl text-foreground">
           TaxiApp
         </Link>
         <div className="flex items-center space-x-4">
           {user ? (
             <>
-              <Link href="/dashboard" className="hover:text-gray-300">
+              {/* NEW: This link only appears if the logged-in user is a Customer */}
+              {role === 'Customer' && (
+                <Link 
+                  href="/driver-registration" 
+                  className="text-sm font-medium text-primary transition-colors hover:text-primary/80"
+                >
+                  Become a Driver
+                </Link>
+              )}
+              <Link 
+                href="/dashboard" 
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
                 Dashboard
               </Link>
               <button
                 onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                className="bg-destructive hover:opacity-90 text-destructive-foreground font-semibold py-2 px-4 rounded-md text-sm"
               >
                 Logout
               </button>
@@ -61,7 +80,7 @@ export default function Header() {
           ) : (
             <Link
               href="/login"
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+              className="bg-primary hover:opacity-90 text-primary-foreground font-semibold py-2 px-4 rounded-md text-sm"
             >
               Login
             </Link>

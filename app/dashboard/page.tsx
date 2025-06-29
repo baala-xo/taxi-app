@@ -1,4 +1,4 @@
-
+// app/dashboard/page.tsx
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -8,7 +8,6 @@ import CustomerDashboard from "../components/CustomerDashboard";
 export default async function DashboardPage() {
   const supabase = createServerComponentClient({ cookies });
 
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -17,31 +16,32 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-
+  // Fetch the user's profile to determine their role
   const { data: profile, error } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user.id)
     .single();
-  
-  if (profile && !profile.role) {
-    redirect('/select-role');
-  }
 
+  // This handles the brief moment after signup before the profile is created.
   if (error || !profile) {
-
-    redirect('/select-role');
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center">
+        <p className="text-muted-foreground">Loading your profile...</p>
+      </div>
+    );
   }
 
+  // Render the correct dashboard based on the user's role
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="w-full max-w-4xl">
+    <div className="p-4 sm:p-6 md:p-8">
+      <div className="container mx-auto">
         {profile.role === "Driver" ? (
           <DriverDashboard />
         ) : (
           <CustomerDashboard />
         )}
       </div>
-    </main>
+    </div>
   );
 }
