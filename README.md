@@ -1,97 +1,77 @@
+# 🚕 Taxi Booking Platform
 
-# Taxi Booking System
+This is a feature-complete, full-stack taxi booking application built with a modern tech stack. It features role-based access for drivers and customers, a real-time booking system, an interactive map interface, and a data-driven recommendation engine to sort available drivers based on performance.
 
-A full-stack taxi booking platform built using Next.js and Supabase, developed as part of a technical assessment. This project demonstrates modern full-stack development with real-time interactions, role-based access, and server-side automation.
+**Live Demo:** [https://taxi-app-steel.vercel.app/](https://taxi-app-steel.vercel.app/)
 
-## Features
+<br>
 
-- **Authentication**  
-  Users can sign up and log in without a password using Supabase magic links.
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 
-- **Role-Based Access Control**  
-  Distinct interfaces and capabilities for customers and drivers, based on user roles.
+## Key Features
 
-- **Driver Dashboard**  
-  Drivers can:
-  - View total earnings
-  - Manage current bookings
-  - Browse ride history with customer feedback
-  - Toggle their availability status
+- **Role-Based Portals**: Separate dashboards for Customers (booking, history, rating) and Drivers (availability, earnings, ride management).
+- **Google OAuth**: Secure user onboarding with Google Authentication.
+- **New User Onboarding**: All users sign up as a "Customer" by default and have the option to register as a "Driver".
+- **Interactive Map Booking**: Users can visually select pickup/destination points using the browser's Geolocation API and debounced address suggestions.
+- **Driver Recommendation Engine**: A PostgreSQL RPC function scores and sorts available drivers based on their average rating, total rides, and verification status.
+- **Complete Ride Lifecycle**: Full end-to-end flow from booking to completion, followed by a dummy payment simulation and a 5-star rating system.
+- **Advanced Backend Logic**: Utilizes PostgreSQL Triggers for automatic profile creation on user signup.
+- **Modern Theming**: A CSS variable-driven system integrated with Tailwind CSS for consistent light and dark modes.
 
-- **Customer Dashboard**  
-  Customers can:
-  - Book rides
-  - View their ride history
-  - Rate and provide feedback on rides
-  - Simulate payments with a dummy system
+## Tech Stack & Libraries
 
-- **Driver Recommendation Engine**  
-  Ranks drivers based on a calculated score derived from their average rating and number of completed rides.
+### **Frontend**
+-   **Framework**: Next.js (App Router)
+-   **Language**: TypeScript
+-   **Styling**: Tailwind CSS (v4 engine)
+-   **UI State**: React Hooks (`useState`, `useEffect`, `useCallback`)
+-   **Animations**: `tailwindcss-animate`
+-   **Utilities**: `clsx`, `tailwind-merge`, `use-debounce`
 
-- **Database Automation**  
-  Uses PostgreSQL triggers to auto-create user profiles and RPC functions for efficient backend computations.
+### **Backend & Database**
+-   **Platform**: Supabase
+-   **Authentication**: Supabase Auth (Google OAuth Provider)
+-   **Database**: Postgres
+-   **API**: Supabase Auto-generated RESTful API & custom RPC Functions (PL/pgSQL)
 
-## Tech Stack
+### **Mapping**
+-   **Library**: Leaflet & React-Leaflet
+-   **Geocoding API**: Nominatim (OpenStreetMap)
+-   **Geospatial Utility**: Turf.js
 
-- **Framework:** Next.js (App Router)  
-- **Backend:** Supabase  
-- **Database:** PostgreSQL  
-- **Styling:** Tailwind CSS  
-- **Language:** TypeScript
+### **Deployment**
+-   **Platform**: Vercel
 
-## Getting Started (Local Development)
+## Local Development Setup
 
-### 1. Clone the Repository
+1.  **Clone Repository**
+    ```bash
+    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
+    cd your-repo-name
+    ```
 
-```bash
-git clone https://github.com/baala-xo/taxi-app.git
-cd taxi-app
-```
+2.  **Install Dependencies**
+    ```bash
+    npm install
+    ```
 
-### 2. Install Dependencies
+3.  **Setup Environment Variables**
+    -   You will need to create your own free Supabase project and set up a Google Cloud OAuth Client to get the necessary keys.
+    -   Create a `.env.local` file in the project root.
+    -   Add your keys to the file:
+    ```
+    NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_PROJECT_URL
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+    NEXT_PUBLIC_BASE_URL=http://localhost:3000
+    ```
 
-```bash
-npm install
-```
+4.  **Setup Database Schema**
+    -   Navigate to the **SQL Editor** in your Supabase project.
+    -   Execute the contents of the `schema.sql` file (if provided) to create all necessary tables, functions, and policies.
 
-### 3. Configure Environment Variables
-
-- Create a new project on [Supabase](https://supabase.com).
-- In the project root, create a `.env.local` file and add the following:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
-```
-
-### 4. Set Up the Database Schema
-
-- Go to your Supabase projectâ€™s SQL Editor.
-- Run the SQL commands from the `schema.sql` file to set up the database (tables, functions, and policies).
-
-### 5. Start the Development Server
-
-```bash
-npm run dev
-```
-
-Open your browser and go to [http://localhost:3000](http://localhost:3000).
-
-## Testing the Application
-
-To fully test the app, use two separate browser windows or tabs to simulate a customer and a driver.
-
-| Driver Workflow                                      | Customer Workflow                                     |
-| --------------------------------------------------- | ---------------------------------------------------- |
-| 1. Sign up with a new email.                        | 1. Sign up with a different email address.           |
-| 2. Choose the "Driver" role.                        | 2. Choose the "Customer" role.                       |
-| 3. Enable "Available for Hire" from the dashboard.  | 3. The available driver will appear on your screen.  |
-| 4. Wait for a booking to appear.                    | 4. Click "Book Now" to confirm a ride.               |
-| 5. After the ride appears, mark it as complete.     | 5. Once completed, refresh the dashboard.            |
-| 6. View updated earnings and average rating.        | 6. Go to "Ride History" to pay and rate the trip.    |
-
-## Repository
-
-You can find the full project source code here:  
-[https://github.com/baala-xo/taxi-app/tree/main](https://github.com/baala-xo/taxi-app/tree/main)
+5.  **Run Development Server**
+    ```bash
+    npm run dev
+    ```
+    The application will be available at `http://localhost:3000`.
