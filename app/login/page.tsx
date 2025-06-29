@@ -32,9 +32,8 @@ export default function LoginPage() {
           supabaseClient={supabase}
           appearance={{ theme: ThemeSupa }}
           theme="dark"
-          // This is the key change: It forces the form to ONLY be for magic links.
-          // This works for both new user sign-ups and existing user sign-ins.
           view="magic_link"
+          providers={['google',]}
           redirectTo={`${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`}
         />
       </div>

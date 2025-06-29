@@ -13,7 +13,5 @@ export async function GET(request: NextRequest) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  // This is the crucial line that tells the app where to go next.
-  // We are ensuring it points to the dashboard.
   return NextResponse.redirect(`${requestUrl.origin}/dashboard`);
 }

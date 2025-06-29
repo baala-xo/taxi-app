@@ -25,4 +25,5 @@ export type Profile = {
     full_name: string | null;
     average_rating: number;
     ride_count: number;
+    is_verified: boolean;
   };
