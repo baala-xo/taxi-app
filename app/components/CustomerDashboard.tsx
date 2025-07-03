@@ -17,6 +17,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Textarea } from "@/components/ui/textarea"
+
+
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 export default function CustomerDashboard() {
   const supabase = createClientComponentClient();
@@ -216,24 +224,46 @@ const fetchData = useCallback(async () => {
   {/* NEW: This whole button block has the new logic */}
   {/* It only appears if the input is empty */}
   {!pickup && (
-    <button 
-      onClick={handleGetCurrentLocation} 
-      disabled={isFetchingLocation}
-      title="Use my current location" 
-      className="absolute top-8 right-1 p-2 text-2xl rounded-full text-muted-foreground hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-wait"
-    >
-      {isFetchingLocation ? (
-        // Show a spinner while loading
-        <svg className="animate-spin h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-      ) : (
-        // Show the target emoji when not loading
-        <span className=" flex items-center bg-primary hover:opacity-90 text-primary-foreground font-bold p-2 m-0 rounded-md justify-center text-xs">Use My Current Location</span>
-      )}
-    </button>
-  )}                {pickupSuggestions.length > 0 && (<div className="absolute z-10 w-full mt-1 bg-card border border-border rounded-lg shadow-lg">{pickupSuggestions.map(s => <div key={s.place_id} onClick={() => selectSuggestion(s, 'pickup')} className="p-3 hover:bg-muted cursor-pointer text-sm">{s.display_name}</div>)}</div>)}
+  <HoverCard>
+    <HoverCardTrigger asChild>
+      <button
+        onClick={handleGetCurrentLocation}
+        disabled={isFetchingLocation}
+        className="absolute top-8 right-1 p-2 text-2xl rounded-full text-muted-foreground hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-wait"
+      >
+        {isFetchingLocation ? (
+          // Show a spinner while loading
+          <svg className="animate-spin h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        ) : (
+          // Show the target SVG when not loading
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-target"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <circle cx="12" cy="12" r="6" />
+            <circle cx="12" cy="12" r="2" />
+          </svg>
+        )}
+      </button>
+    </HoverCardTrigger>
+    <HoverCardContent className="w-auto p-2 text-sm">
+      Use my current location
+    </HoverCardContent>
+  </HoverCard>
+)}  
+                {pickupSuggestions.length > 0 && (<div className="absolute z-10 w-full mt-1 bg-card border border-border rounded-lg shadow-lg">{pickupSuggestions.map(s => <div key={s.place_id} onClick={() => selectSuggestion(s, 'pickup')} className="p-3 hover:bg-muted cursor-pointer text-sm">{s.display_name}</div>)}</div>)}
               </div>
               <div className="relative">
                 <label className="text-sm font-medium text-muted-foreground">Destination</label>
@@ -332,14 +362,31 @@ const fetchData = useCallback(async () => {
               </div>
               {ratingRideId !== ride.id && (
                 <div className="mt-4 pt-4 border-t border-border flex justify-end space-x-3">
-                  {ride.payment_status !== 'paid' && (<button onClick={() => handleDummyPayment(ride.id)} disabled={ride.status !== 'completed'} title={ride.status !== 'completed' ? 'Ride must be completed before payment' : 'Pay for this ride'} className="bg-primary hover:opacity-90 text-primary-foreground font-bold py-2 px-4 rounded-md disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed">Pay Now</button>)}
+                  {ride.payment_status !== 'paid' && (
+  <HoverCard>
+    <HoverCardTrigger asChild>
+      <button
+        onClick={() => handleDummyPayment(ride.id)}
+        disabled={ride.status !== 'completed'}
+        className="bg-primary hover:opacity-90 text-primary-foreground font-bold py-2 px-4 rounded-md disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
+      >
+        Pay Now
+      </button>
+    </HoverCardTrigger>
+    {ride.status !== 'completed' && ( // Conditionally render content only when disabled
+      <HoverCardContent className="w-auto p-2 text-sm">
+        Ride must be completed to pay
+      </HoverCardContent>
+    )}
+  </HoverCard>
+)}
                   {ride.status === 'completed' && !ride.rating && (<button onClick={() => { setRatingRideId(ride.id); setRating(0); setFeedback(''); }} className="bg-secondary hover:opacity-90 text-secondary-foreground font-bold py-2 px-4 rounded-md">Rate Ride</button>)}
                 </div>
               )}
               {ratingRideId === ride.id && (
                 <div className="mt-4 pt-4 border-t border-border">
                   <div className="flex items-center space-x-1">{[1, 2, 3, 4, 5].map(star => (<button key={star} onClick={() => setRating(star)} className={`text-2xl ${star <= rating ? 'text-yellow-400' : 'text-muted-foreground/50'}`}>★</button>))}</div>
-                  <textarea placeholder="Leave feedback (optional)" onChange={(e) => setFeedback(e.target.value)} className="mt-4 w-full p-2 rounded-md bg-input text-foreground h-20"/>
+                  <Textarea placeholder="Leave feedback (optional)" onChange={(e) => setFeedback(e.target.value)} className="mt-4 w-full p-2 rounded-md bg-input text-foreground h-20"/>
                   <div className="mt-4 flex items-center justify-end space-x-2">
                     <button onClick={() => setRatingRideId(null)} className="text-sm text-muted-foreground">Cancel</button>
                     <button onClick={handleRatingSubmit} className="bg-primary hover:opacity-90 text-primary-foreground font-bold py-2 px-4 rounded-md">Submit Review</button>
