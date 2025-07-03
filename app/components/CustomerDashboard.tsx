@@ -222,7 +222,7 @@ const fetchData = useCallback(async () => {
   />
 
   {/* NEW: This whole button block has the new logic */}
-  {/* It only appears if the input is empty */}
+  {/* It only appears if the input is empty ok*/}
   {!pickup && (
   <HoverCard>
     <HoverCardTrigger asChild>
