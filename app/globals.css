@@ -203,3 +203,9 @@ body {
     letter-spacing: var(--tracking-normal);
   }
 }
+
+@layer utilities {
+  .font-tamil {
+    font-family: var(--font-arima);
+  }
+}
