@@ -1,4 +1,4 @@
-// app/dashboard/page.tsx
+
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -16,14 +16,14 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  // Fetch the user's profile to determine their role
+  
   const { data: profile, error } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user.id)
     .single();
 
-  // This handles the brief moment after signup before the profile is created.
+  
   if (error || !profile) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center">

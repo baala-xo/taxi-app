@@ -1,12 +1,11 @@
-// app/components/Map.tsx
+
 'use client';
 
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// This creates one reliable icon instance that points to the files in your /public folder.
-// This is the standard and most stable way to handle icons.
+
 const defaultIcon = L.icon({
     iconUrl: "/marker-icon.png",
     iconRetinaUrl: "/marker-icon-2x.png",
@@ -17,7 +16,7 @@ const defaultIcon = L.icon({
     shadowSize: [41, 41]
 });
 
-// Define the props our map will accept
+
 interface MapProps {
   center: [number, number];
   pickup: [number, number] | null;
@@ -25,7 +24,7 @@ interface MapProps {
   onMapClick: (latlng: L.LatLng) => void;
 }
 
-// A new helper component to handle map clicks
+
 const MapEvents = ({ onMapClick }: { onMapClick: (latlng: L.LatLng) => void }) => {
   useMapEvents({
     click(e) {
@@ -35,7 +34,7 @@ const MapEvents = ({ onMapClick }: { onMapClick: (latlng: L.LatLng) => void }) =
   return null;
 };
 
-// A new helper component to automatically fly to the new center
+
 const ChangeView = ({ center }: { center: [number, number] }) => {
     const map = useMap();
     map.flyTo(center, map.getZoom());
@@ -57,7 +56,7 @@ const Map: React.FC<MapProps> = ({ center, pickup, destination, onMapClick }) =>
       />
       <MapEvents onMapClick={onMapClick} />
 
-      {/* We now pass our `defaultIcon` to every marker */}
+      
       {pickup && (
         <Marker position={pickup} icon={defaultIcon}>
           <Popup>Pickup Location</Popup>

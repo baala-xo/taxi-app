@@ -4,11 +4,11 @@ export type Profile = {
   full_name: string | null;
   role: 'Driver' | 'Customer';
   is_available: boolean;
-  image_url: string | null;  // Added
+  image_url: string | null; 
   is_verified: boolean;
 };
 
-// types/index.ts
+
 export type Ride = {
 id: number;
 created_at: string;
@@ -21,7 +21,6 @@ price?: number;
 rating?: number;
 feedback?: string;
 payment_status?: string;
-// This is the new part for the driver's name
 profiles: {
   full_name: string | null;
 } | null;

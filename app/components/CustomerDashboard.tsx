@@ -31,13 +31,13 @@ export default function CustomerDashboard() {
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   
-  // State for multi-stage booking flow
+
   const [stage, setStage] = useState<'location' | 'drivers'>('location');
   
   const [drivers, setDrivers] = useState<RecommendedDriver[]>([]);
   const [rideHistory, setRideHistory] = useState<Ride[]>([]);
 
-  // State for forms and map
+
   const [pickup, setPickup] = useState('');
   const [pickupCoords, setPickupCoords] = useState<[number, number] | null>(null);
   const [dropoff, setDropoff] = useState('');
@@ -56,12 +56,11 @@ export default function CustomerDashboard() {
 
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
-  // Dynamically import the Map component to ensure it only runs on the client-side
+
   const Map = dynamic(() => import('@/app/components/Map'), { 
     ssr: false 
   });
   
-  // --- HELPER FUNCTIONS ---
 
   const getAddressFromCoords = async (lat: number, lon: number) => {
     try {
@@ -91,7 +90,7 @@ const fetchData = useCallback(async () => {
   if (user) {
     setCurrentUserId(user.id);
 
-    // We now fetch the user's own profile along with the other data
+
     const [driversRes, historyRes, profileRes] = await Promise.all([
       supabase.rpc('get_recommended_drivers'),
       supabase.from('rides').select('*, profiles:driver_id ( full_name )').eq('customer_id', user.id).order('created_at', { ascending: false }),
@@ -105,7 +104,7 @@ const fetchData = useCallback(async () => {
     if (historyRes.error) console.error('Error fetching history:', historyRes.error); 
     else setRideHistory(historyRes.data || []);
 
-    // This sets our new customerName state variable
+
     if (profileRes.error) console.error('Error fetching user profile:', profileRes.error);
     else setCustomerName(profileRes.data?.full_name || null);
   }
@@ -113,9 +112,7 @@ const fetchData = useCallback(async () => {
 }, [supabase]);
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  // --- EVENT HANDLERS ---
 
-  // This is the new version of the function
   const handleGetCurrentLocation = () => {
     setIsFetchingLocation(true); // --- Start loading ---
 
@@ -198,7 +195,7 @@ const fetchData = useCallback(async () => {
       <AnimatePresence mode="wait">
       {stage === 'location' && (
   <motion.div
-    key="location-stage" // A unique key is essential
+    key="location-stage" 
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
@@ -210,7 +207,7 @@ const fetchData = useCallback(async () => {
           <p className="mt-2 text-muted-foreground">Type an address or use the map to set your route.</p>
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             <div className="space-y-4">
-              {/* This is the new JSX for the Pickup Location input */}
+              
 <div className="relative">
   <label className="text-sm font-medium text-muted-foreground">Pickup Location</label>
   <input 
@@ -221,8 +218,7 @@ const fetchData = useCallback(async () => {
     className="mt-1 w-full p-3 pr-12 rounded-lg bg-input text-foreground border-border border"
   />
 
-  {/* NEW: This whole button block has the new logic */}
-  {/* It only appears if the input is empty ok*/}
+  
   {!pickup && (
   <HoverCard>
     <HoverCardTrigger asChild>
@@ -238,7 +234,7 @@ const fetchData = useCallback(async () => {
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
         ) : (
-          // Show the target SVG when not loading
+  
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -282,7 +278,7 @@ const fetchData = useCallback(async () => {
       )}
       {stage === 'drivers' && (
   <motion.div
-    key="drivers-stage" // A different unique key is essential
+    key="drivers-stage" 
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
@@ -294,7 +290,7 @@ const fetchData = useCallback(async () => {
           <h1 className="text-2xl font-bold text-foreground">Recommended Drivers</h1>
           <p className="mt-2 text-muted-foreground">Our top drivers, sorted for you.</p>
 
-          {/* This is the new horizontally scrollable container */}
+         
           {drivers.length > 0 ? (
   <Carousel
     opts={{
@@ -306,7 +302,7 @@ const fetchData = useCallback(async () => {
       {drivers.map((driver) => (
         <CarouselItem key={driver.id} className="md:basis-1/2 lg:basis-1/4">
           <div className="p-1">
-            {/* This is your existing driver card code, unchanged */}
+         
             <div className="w-full flex-shrink-0 border-border border rounded-lg shadow-lg overflow-hidden flex flex-col bg-card text-card-foreground">
               <div className="relative w-full aspect-square">
                 <Image src={driver.image_url || "/default-driver.png"} alt={driver.full_name || 'Driver'} fill className="object-cover" />
@@ -342,7 +338,7 @@ const fetchData = useCallback(async () => {
     <CarouselNext className="hidden sm:flex" />
   </Carousel>
 ) : (
-  // The 'no drivers available' message remains the same
+  
   <div className="mt-6 p-8 text-center bg-card rounded-lg border-border border">
     <p className="text-muted-foreground">No drivers are available right now.</p>
   </div>
@@ -350,7 +346,7 @@ const fetchData = useCallback(async () => {
         </motion.div>
       )}
 </AnimatePresence>
-      {/* --- THIS IS THE FULL, UNABBREVIATED RIDE HISTORY SECTION --- */}
+  
       <div className="mt-16">
         <h2 className="text-2xl font-bold text-foreground">My Ride History</h2>
         <div className="mt-6 space-y-4">
@@ -373,7 +369,7 @@ const fetchData = useCallback(async () => {
         Pay Now
       </button>
     </HoverCardTrigger>
-    {ride.status !== 'completed' && ( // Conditionally render content only when disabled
+    {ride.status !== 'completed' && ( 
       <HoverCardContent className="w-auto p-2 text-sm">
         Ride must be completed to pay
       </HoverCardContent>

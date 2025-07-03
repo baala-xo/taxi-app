@@ -1,4 +1,4 @@
-// app/driver-registration/page.tsx
+
 'use client';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
@@ -9,7 +9,7 @@ export default function DriverRegistrationPage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return alert('You must be logged in.');
 
-    // Update the user's role to 'Driver'
+    
     const { error } = await supabase
       .from('profiles')
       .update({ role: 'Driver' })
@@ -19,13 +19,13 @@ export default function DriverRegistrationPage() {
       alert('Error submitting application. Please try again.');
     } else {
       alert('Congratulations! You are now registered as a driver. Your account will be reviewed for verification.');
-      // Use hard reload to ensure all state is updated correctly
+      
       window.location.assign('/dashboard');
     }
   };
 
   return (
-    // Updated container to center the card
+    
     <div className="flex items-center justify-center min-h-screen p-4 bg-background">
       {/* NEW: Card container for a polished look, using theme variables */}
       <div className="w-full max-w-2xl text-center p-8 sm:p-12 border border-border rounded-xl bg-card shadow-lg">

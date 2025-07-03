@@ -1,4 +1,4 @@
-// app/components/DriverDashboard.tsx
+
 'use client';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -12,7 +12,7 @@ export default function DriverDashboard() {
   const [userId, setUserId] = useState<string | null>(null);
   const [rides, setRides] = useState<Ride[]>([]);
 
-  // --- LOGIC AND DATA FETCHING (UNCHANGED) ---
+
   const fetchDriverData = useCallback(async () => {
     setLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
@@ -55,7 +55,7 @@ export default function DriverDashboard() {
 
   if (loading) return <div className="p-8 text-center text-muted-foreground">Loading dashboard...</div>;
 
-  // --- JSX WITH THEME CLASSES APPLIED ---
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-foreground">Driver Dashboard</h1>
@@ -75,7 +75,7 @@ export default function DriverDashboard() {
         </div>
       </div>
 
-      {/* Section: Current Bookings */}
+
       <div className="mt-12">
         <h2 className="text-xl font-semibold text-foreground">My Current Bookings</h2>
         <div className="mt-4 space-y-4">
@@ -91,7 +91,7 @@ export default function DriverDashboard() {
         </div>
       </div>
 
-      {/* Section: Completed Ride History */}
+
       <div className="mt-12">
         <h2 className="text-xl font-semibold text-foreground">Completed Ride History</h2>
         <div className="mt-4 space-y-4">

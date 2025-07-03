@@ -1,4 +1,4 @@
-// app/components/Header.tsx
+
 'use client';
 
 import { useEffect, useState } from "react";
@@ -18,7 +18,7 @@ export default function Header() {
       setUser(user);
 
       if (user) {
-        // Fetch the user's role, name, and image_url from the profiles table
+
         const { data: userProfile } = await supabase
           .from('profiles')
           .select('full_name, image_url, role')
@@ -33,7 +33,7 @@ export default function Header() {
     fetchUserAndProfile();
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      // Re-fetch everything when auth state changes (login/logout)
+
       fetchUserAndProfile();
     });
 
@@ -44,7 +44,7 @@ export default function Header() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    // Use a hard refresh to ensure all state is cleared across the app
+
     window.location.href = '/';
   };
 
@@ -57,7 +57,7 @@ export default function Header() {
         <div className="flex items-center space-x-4">
           {user && profile ? (
             <>
-              {/* This link only appears if the logged-in user is a Customer */}
+
               {profile.role === 'Customer' && (
                 <Link 
                   href="/driver-registration" 
